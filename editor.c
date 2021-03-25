@@ -4,51 +4,68 @@
 
 /* comenzi de baza */
 // DONE: scrie descriere functie del
-// TODO: scrie microinstructiune ins
-// TODO: scrie microinstructiune chg + implementare <<pointer>> general
+// DONE: scrie microinstructiune ins
+// DONE:scrie microinstructiune chg + implementare <<pointer>> general
+// DONE:  update del: cazuri speciale de null
+// DONE: update del: return head
+// TODO: update ins: return head
+// TODO: create micro.h
+
+int PX, PY;
 /*
  * functie care sterge caracterul j de pe linia i, sau daca j = -1 sterge toata
- * linia i. 
- * Coduri returnare:
- * ret -1 = linia ceruta(i) nu exista
- * ret -2 = caracterul cerut nu exista pe linia data
- * ret -3 = a sters linia i
- * altfel functia returneaza caracterul sters
+ * linia i. returneaza primul nod al listei dublu inlantuite in care este tinut
+ * textul.
 */
-int del(Node *text, int i, int j){
+Node *del(Node *text, int i, int j){
     Node *p;
     int auxi, auxj;
     p = text;
     auxi = i;
-    auxj = j;
+    auxj = j-1;
     while(auxi && p){
         if(p->data == '\n') --auxi;
         p = p->next;
     }
-    if(auxi && p == NULL)
-        return -1;
-    // printList(p);
+    if(auxi >= 0 && p == NULL){
+        printf("Erroare: nu exista linia data pentru stergere!\n");
+        return text;
+    }
     if(j == -1){
+        if(i){
         Node *aux = p->back;
+        Node *paux = p;
         while(auxj && p){
             if(p->data == '\n') auxj=0;
             p = p->next;
+            paux = p;
         }
+        if(p!=NULL){
         p->back = aux;
         aux->next = p;
-        return -3;
+        } else aux->next = NULL;
+        return text;
+        } else {
+        while(auxj && p){
+            if(p->data == '\n') auxj=0;
+            p = p->next;
+        }   
+        return p;
+        }
     } else {
-    while(auxj && p){
+    if(i == 0 && j == 0)
+        return text->next;
+    while(auxj >= 0 && p){
         p = p->next;
         auxj--;
     }
     if(auxj && p == NULL)
-        return -2;
+        return text;
     p->back->next = p->next;
-    p->next->back = p->back;
-    int ret = p->data;
+    if(p->next)
+        p->next->back = p->back;
     free(p);
-    return ret;
+    return text;
     }
 }
 
@@ -60,42 +77,59 @@ int del(Node *text, int i, int j){
  * altfel functia returneaza caracterul adaugat
 */
 int ins(Node *text, int i, int j, char data){
-    Node *p;
+    Node *p, *aux;
     int auxi, auxj;
     p = text;
     auxi = i;
     auxj = j;
     while(auxi && p){
         if(p->data == '\n') --auxi;
+        aux = p;
         p = p->next;
     }
-    if(auxi && p == NULL)
-        return -1;
+    if(auxi == 0 && p == NULL){
+        Node *toAdd = init_node(data);
+        toAdd->back = p->back;
+        toAdd->next = p;
+        p->back = toAdd;
+        if(toAdd->back != NULL)
+            toAdd->back->next = toAdd;
+        return 0;
+    }
+    if(auxj == -1){
+        Node *toAdd = init_node(data);
+        toAdd->back = p->back;
+        toAdd->next = p;
+        p->back = toAdd;
+        if(toAdd->back != NULL)
+            toAdd->back->next = toAdd;
+    } else {
     while(auxj && p){
         p = p->next;
         auxj--;
     }
-    if(auxj && p == NULL)
+    if(auxj >= 0 && p == NULL)
         return -2; 
-
-    Node *n = p->next;
-    printList(text);
-    printf("[ins]> %c %c\n", p->data, n->data);
-
     Node *toAdd = init_node(data);
-    toAdd->data = data;
     toAdd->next = p->next;
     toAdd->back = p;
-    p->next->back = toAdd;
+    if(p->next != NULL)
+        p->next->back = toAdd;
     p->next = toAdd;
-
-    printList(text);
-    printf("got out \n");
+    }
     return data;
 }
 
+/*
+ * functie care schimba coordonatele pointerului de scriere text
+*/
+void chg(int i, int j){
+    PX = i;
+    PY = j;
+}
 
 int main(){
+    PX = PY = 0;
     int err;
     Node *head = init_node('t');
     head = pushList(head, 'e');
@@ -118,20 +152,15 @@ int main(){
 
     printList(head);
 
-    printf("Testing del function...\n");
-    err = del(head, 1, -1);
-    if(err == -1 || err == -2){
-        printf("Eroare: %d\n", err);
-        return 0;
-    }
-    printList(head);
+    // printf("Testing del function...\n");
+    // head = del(head, 2, 3);
+    // printList(head);
 
     printf("Testing ins function...\n");
-    err = ins(head, 1, 3, '0');
-    if(err == -1 || err == -2){
-        printf("Eroare: %d\n", err);
-        return 0;
-    }
+    err = ins(head, 0, -1, '0');
+    err = ins(head, 3, 2, '0');
+    printf("%d\n", err);
+    head = getHead(head);
     printList(head);
     return 0;
 }

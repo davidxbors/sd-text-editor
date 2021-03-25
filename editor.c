@@ -36,7 +36,6 @@ int del(Node *text, int i, int j){
         }
         p->back = aux;
         aux->next = p;
-        free(p->back);
         return -3;
     } else {
     while(auxj && p){
@@ -84,6 +83,11 @@ int ins(Node *text, int i, int j, char data){
     printf("[ins]> %c %c\n", p->data, n->data);
 
     Node *toAdd = init_node(data);
+    toAdd->data = data;
+    toAdd->next = p->next;
+    toAdd->back = p;
+    p->next->back = toAdd;
+    p->next = toAdd;
 
     printList(text);
     printf("got out \n");
@@ -121,7 +125,7 @@ int main(){
         return 0;
     }
     printList(head);
-    
+
     printf("Testing ins function...\n");
     err = ins(head, 1, 3, '0');
     if(err == -1 || err == -2){
@@ -129,6 +133,5 @@ int main(){
         return 0;
     }
     printList(head);
-    
     return 0;
 }

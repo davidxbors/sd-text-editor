@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include "lista.h"
-#include "stiva.h"
+// #include "stiva.h"
 
 /* comenzi de baza */
-
+// DONE: scrie descriere functie del
+// TODO: scrie microinstructiune ins
+// TODO: scrie microinstructiune chg + implementare <<pointer>> general
 /*
+ * functie care sterge caracterul j de pe linia i, sau daca j = -1 sterge toata
+ * linia i. 
+ * Coduri returnare:
  * ret -1 = linia ceruta(i) nu exista
  * ret -2 = caracterul cerut nu exista pe linia data
  * ret -3 = a sters linia i
@@ -48,63 +53,46 @@ int del(Node *text, int i, int j){
     }
 }
 
-// int del(Nodes *text, int i, int j){
-//     Nodes *p;
-//     int auxi, auxj;
-//     auxi = i;
-//     auxj = j;
-//     p = text;
-//     while(auxi){
-//         p = p->next;
-//         --auxi;
-//     }
-//     if(p == NULL)
-//         return -1;
-//     Node *h = &p->data;
-//     while(auxj){
-//         h = h->next;
-//         --auxj;
-//     }
-//     if(h == NULL)
-//         return -2;
-//     printf("%c\n", h->data);
-//     int ret = h->data;
-//     printList(&p->data);
-//     return ret;
-// }
+/*
+ * 
+ * Coduri returnare:
+ * ret -1 = linia ceruta(i) nu exista
+ * ret -2 = caracterul cerut nu exista pe linia data
+ * altfel functia returneaza caracterul adaugat
+*/
+int ins(Node *text, int i, int j, char data){
+    Node *p;
+    int auxi, auxj;
+    p = text;
+    auxi = i;
+    auxj = j;
+    while(auxi && p){
+        if(p->data == '\n') --auxi;
+        p = p->next;
+    }
+    if(auxi && p == NULL)
+        return -1;
+    while(auxj && p){
+        p = p->next;
+        auxj--;
+    }
+    if(auxj && p == NULL)
+        return -2; 
 
+    Node *n = p->next;
+    printList(text);
+    printf("[ins]> %c %c\n", p->data, n->data);
+
+    Node *toAdd = init_node(data);
+
+    printList(text);
+    printf("got out \n");
+    return data;
+}
 
 
 int main(){
-    //////// test lista.h
-    // Node *p = init_node('d');
-    // p = pushList(p, 'a');
-    // p = pushList(p, 'v');
-    // p = pushList(p, 'i');
-    // p = pushList(p, 'd');
-    // printList(p);
-    // p = prependList(p, '_');
-    // printList(p);
-    // p = popList(p);
-    // printList(p);
-    ///////// test stiva.h
-    // Stiva *s = init_stiva('d');
-    // s = pushStiva(s, 'a');
-    // s = pushStiva(s, 'v');
-    // printStiva(s);
-    // s = popStiva(s);
-    // printStiva(s);
-
-    
-    // Nodes *head = init_nodes(*p3);
-    // head = pushNodes(head, *p2);
-    // head = prependNodes(head, *p);
-    // printNodes(head);
-
-    // printf("Testing del function...\n");
-    // del(head, 1, 1);
-    // printNodes(head);
-
+    int err;
     Node *head = init_node('t');
     head = pushList(head, 'e');
     head = pushList(head, 's');
@@ -125,8 +113,22 @@ int main(){
     head = prependList(head, 't');
 
     printList(head);
+
     printf("Testing del function...\n");
-    del(head, 1, -1);
+    err = del(head, 1, -1);
+    if(err == -1 || err == -2){
+        printf("Eroare: %d\n", err);
+        return 0;
+    }
     printList(head);
+    
+    printf("Testing ins function...\n");
+    err = ins(head, 1, 3, '0');
+    if(err == -1 || err == -2){
+        printf("Eroare: %d\n", err);
+        return 0;
+    }
+    printList(head);
+    
     return 0;
 }

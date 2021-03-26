@@ -31,9 +31,8 @@ int main(){
     printList(head);
 
     printf("Testing ins function...\n");
-    head = ins(head, 4, 0, '0');
+    head = ins(head, 1, 2, '0');
     head = getHead(head);
     printList(head);
-    printf("\n");
     return 0;
 }

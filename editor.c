@@ -26,12 +26,12 @@ int main(){
 
     printList(head);
 
-    // printf("Testing del function...\n");
-    // head = del(head, 2, 3);
-    // printList(head);
+    printf("Testing del function...\n");
+    head = del(head, 2, 4);
+    printList(head);
 
     printf("Testing ins function...\n");
-    head = ins(head, 2, 1, '0');
+    head = ins(head, 4, 0, '0');
     head = getHead(head);
     printList(head);
     printf("\n");

@@ -98,7 +98,7 @@ Node *ins(Node *text, int i, int j, char data){
         return text; 
 
     }
-    if(auxi == 1 && p == NULL){
+    if(auxi == 0 && p == NULL){
         Node *toAdd = init_node(data);
         toAdd->back = aux;
         toAdd->next = p;
@@ -111,7 +111,8 @@ Node *ins(Node *text, int i, int j, char data){
             p = NULL;
         auxj--;
     }
-    if(auxj >= 0 && p == NULL){
+    printf("%d\n", auxj);
+    if(auxj > 0 && p == NULL){
         printf("Nu se poate insera decat maxim o pozitie in plus in afara textului existent! err 2\n");
         return text; 
     }

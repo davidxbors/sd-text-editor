@@ -3,14 +3,6 @@
  */
 #include "lista.h"
 
-// DONE: scrie descriere functie del
-// DONE: scrie microinstructiune ins
-// DONE:scrie microinstructiune chg + implementare <<pointer>> general
-// DONE:  update del: cazuri speciale de null
-// DONE: update del: return head
-// DONE: update ins: return head
-// DONE: create micro.h
-
 /* coordonatele <<pointerului>> de text */
 int PX, PY;
 
@@ -113,7 +105,7 @@ Node *ins(Node *text, int i, int j, char data){
     while(auxj && p){
         aux = p;
         p = p->next;
-        if(p->data == '\n'){
+        if(p != NULL && p->data == '\n'){
             aux = p;
             p = NULL;
         }
@@ -125,6 +117,7 @@ Node *ins(Node *text, int i, int j, char data){
         return text; 
     }
     if(p!=NULL){
+    printf("wtf?!");
     Node *toAdd = init_node(data);
     toAdd->next = p->next;
     toAdd->back = p;
@@ -132,6 +125,8 @@ Node *ins(Node *text, int i, int j, char data){
         p->next->back = toAdd;
     p->next = toAdd;
     } else {
+        if(aux == NULL) printf("wtf\n");
+        printf("wtf?!");
         Node *toAdd = init_node(data);
         toAdd->next = aux->next;
         aux->next = toAdd;

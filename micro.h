@@ -86,7 +86,7 @@ Node *ins(Node *text, int i, int j, char data){
         aux = p;
         p = p->next;
     }
-    printf("first aux: %d\n", auxi);
+    // printf("first aux: %d\n", auxi);
     if(auxi >= 1 && p == NULL){
         printf("Nu se poate insera decat maxim o pozitie in plus in afara textului existent! err 1\n");
         return text; 
@@ -112,7 +112,7 @@ Node *ins(Node *text, int i, int j, char data){
         }
         auxj--;
     }
-    printf("%d\n", auxj);
+    // printf("%d\n", auxj);
     if(auxj > 0 && p == NULL){
         printf("Nu se poate insera decat maxim o pozitie in plus in afara textului existent! err 2\n");
         return text; 
@@ -143,4 +143,17 @@ Node *ins(Node *text, int i, int j, char data){
 void chg(int i, int j){
     PX = i;
     PY = j;
+}
+
+/*
+ * functie care salveaza o lista de caractere intr-un fisier
+ */
+void save(Node *text, char *filename){
+    FILE *fout = fopen(filename, "w");
+    Node *counter = text;
+    while(counter != NULL){
+        fprintf(fout, "%c", counter->data);
+        counter = counter->next;
+    }
+    fclose(fout);
 }

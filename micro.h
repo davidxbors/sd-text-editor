@@ -77,7 +77,8 @@ Node *ins(Node *text, int i, int j, char data){
         Node *toAdd = init_node(data);
         toAdd->back = NULL;
         toAdd->next = text;
-        text->back = toAdd;
+	if(text != NULL)
+        	text->back = toAdd;
         return toAdd;
     }
     while(auxi && p){
@@ -117,7 +118,7 @@ Node *ins(Node *text, int i, int j, char data){
         return text; 
     }
     if(p!=NULL){
-    printf("wtf?!");
+    //printf("wtf?!");
     Node *toAdd = init_node(data);
     toAdd->next = p->next;
     toAdd->back = p;
@@ -125,8 +126,8 @@ Node *ins(Node *text, int i, int j, char data){
         p->next->back = toAdd;
     p->next = toAdd;
     } else {
-        if(aux == NULL) printf("wtf\n");
-        printf("wtf?!");
+        //if(aux == NULL) printf("wtf\n");
+        //printf("wtf?!");
         Node *toAdd = init_node(data);
         toAdd->next = aux->next;
         aux->next = toAdd;

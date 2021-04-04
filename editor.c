@@ -12,7 +12,7 @@
  * DONE b -> del the last char before pointer
  * DONE dl [line] -> del either the current line or line number [line]
  * DONE gl line -> set cursor on line
- * gc char [line]
+ * DONE gc char [line] -> set cursor at char and even on a specific line number
  * d [chars]
  * dw word
  * da word  
@@ -117,7 +117,70 @@ int main(){
                         }
                         printf("%d\n", x);
                         chg(0, x-1);
+                } else if(counter->data == 'g' && counter->next->data == 'c'){
+                    counter = counter->next->next->next;
+                    char cauta = counter->data;
+                    counter = counter->next;
+                    // printf("wtf: %c %c\n", cauta, counter->data);
+                    if(counter && counter->data == '\n'){
+                        // se cauta pe linia curenta
+                        Node *i = text;
+                        int ax = PX;
+                        int ay = PY;
+                        int aux = PY;
+                        PX = 0;
+                        while(i && aux){
+                            if(i->data == '\n') --aux;
+                            i = i->next;
+                        }
+                        // printf("am primit gc simplu si caut caracterul %c!", cauta);
+                        // printf("%c\n", i->data);
+                        while(i && i->data != '\n' && i->data != cauta){
+                            i = i->next;
+                            PX++;
+                        }
+                        if(i == NULL || i->data == '\n'){
+                            printf("Nu s-a gasit caracterul pe linia curenta!\n");
+                            chg(ax, ay);
+                        } else {
+                        printf("Am gasit %c pe linia %d coloana %d!\n", cauta, PY, PX);
+                        }
+                    } else if(counter && counter->data == ' '){
+                        Node *cc;
+                        cc = counter->next;
+                        int x = 0;
+                        int p = 1;
+                        while(cc && cc->data != '\n'){
+                            printf("haha: %d ; %d\n", atoi(&cc->data), x);
+                            x = x * p + atoi(&cc->data);
+                            p *= 10;
+                            cc = cc->next;
+                        }
+                        // se cauta pe linia x
+                        Node *i = text;
+                        int ax = PX;
+                        int ay = PY;
+                        int aux = x;
+                        PX = 0;
+                        while(i && aux){
+                            if(i->data == '\n') --aux;
+                            i = i->next;
+                        }
+                        PY = x;
+                        // printf("am primit gc simplu si caut caracterul %c!", cauta);
+                        // printf("%c\n", i->data);
+                        while(i && i->data != '\n' && i->data != cauta){
+                            i = i->next;
+                            PX++;
+                        }
+                        if(i == NULL || i->data == '\n'){
+                            printf("Nu s-a gasit caracterul pe linia curenta!\n");
+                            chg(ax, ay);
+                        } else {
+                        printf("Am gasit %c pe linia %d coloana %d!\n", cauta, PY, PX);
+                        }
                     }
+                }
                 if(counter != NULL)
                     counter = counter->next;
             }

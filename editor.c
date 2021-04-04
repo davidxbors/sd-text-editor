@@ -180,6 +180,60 @@ int main(){
                         printf("Am gasit %c pe linia %d coloana %d!\n", cauta, PY, PX);
                         }
                     }
+                } else if(counter->data == 'd' && counter->next->data == 'w'){
+                    counter = counter->next->next->next;
+                    char *cuvant = (char *)malloc(100);
+                    while (counter != NULL && counter->data != '\n')
+                    {
+                        // char str[2];
+                        // str[0] = counter->data;
+                        strcat(cuvant, &counter->data);                        
+                        counter = counter->next;
+                    }
+                    printf("traba sters cuvantul %s\n", cuvant);
+                    Node *i = text;
+                    int aux = PX;
+                    int auy = PY;
+                    while(i && auy){
+                        if(i->data == '\n') --auy;
+                        i = i->next;
+                    }
+                    while (i && aux)
+                    {
+                        --aux;
+                        i = i->next;
+                    }
+                    if(i)
+                    printf("%c\n", i->data);
+                    int ok = 0;
+                    int k = 0;
+                    int sx, sy;
+                    aux = PX;
+                    while(!ok && i){
+                        while(i && i->data != cuvant[k]) i = i->next, aux++;
+                        sx = aux;
+                        sy = aux;
+                        while(i && i->data == cuvant[k] && k < strlen(cuvant)){
+                            ++k;
+                            i = i->next;
+                            sy++;
+                        }
+                        if(k == strlen(cuvant)){ 
+                            ok = 1;
+                            // printf("before:\n");
+                            // printList(text);
+                            // printf("traba sters intre %d si %d inclusiv\n", sx, sy-1);
+                            aux = k;
+                            while(aux){
+                                del(text, PY, sx);
+                                --aux;
+                            }
+                            // printf("after:\n");
+                            // printList(text);
+                        } else {
+                            k = 0;
+                        }
+                    }
                 }
                 if(counter != NULL)
                     counter = counter->next;

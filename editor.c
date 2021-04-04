@@ -13,8 +13,8 @@
  * DONE dl [line] -> del either the current line or line number [line]
  * DONE gl line -> set cursor on line
  * DONE gc char [line] -> set cursor at char and even on a specific line number
+ * DONE dw word
  * d [chars]
- * dw word
  * da word  
  * re old_word new_word
  * ra old_word new_word
@@ -234,6 +234,24 @@ int main(){
                             k = 0;
                         }
                     }
+                } else if(counter->data == 'd' && counter->next->data == ' '){
+                   Node *cc;
+                        cc = counter->next;
+                        int x = 0;
+                        int p = 1;
+                        while(cc && cc->data != '\n'){
+                            printf("haha: %d ; %d\n", atoi(&cc->data), x);
+                            x = x * p + atoi(&cc->data);
+                            p *= 10;
+                            cc = cc->next;
+                        }
+                        printf("sterg %d caractere", x);
+                        while(x){
+                            del(text, PY, PX);
+                            --x;
+                        }
+                } else if(counter->data == 'd' && counter->next->data == '\n'){
+                    del(text, PY, PX);
                 }
                 if(counter != NULL)
                     counter = counter->next;

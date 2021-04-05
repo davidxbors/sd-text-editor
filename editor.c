@@ -13,14 +13,62 @@
  * DONE dl [line] -> del either the current line or line number [line]
  * DONE gl line -> set cursor on line
  * DONE gc char [line] -> set cursor at char and even on a specific line number
+ * DONE d [chars]
  * DONE dw word
- * d [chars]
- * da word  
+ * DONE da word  
  * re old_word new_word
  * ra old_word new_word
  * u
  * r
  */
+
+
+Node *del_word(Node *text, char *cuvant){
+    Node *i = text;
+                    int aux = PX;
+                    int auy = PY;
+                    while(i && auy){
+                        if(i->data == '\n') --auy;
+                        i = i->next;
+                    }
+                    while (i && aux)
+                    {
+                        --aux;
+                        i = i->next;
+                    }
+                    if(i)
+                    printf("%c\n", i->data);
+                    int ok = 0;
+                    int k = 0;
+                    int sx, sy;
+                    aux = PX;
+                    while(!ok && i){
+                        while(i && i->data != cuvant[k]) i = i->next, aux++;
+                        sx = aux;
+                        sy = aux;
+                        while(i && i->data == cuvant[k] && k < strlen(cuvant)){
+                            ++k;
+                            i = i->next;
+                            sy++;
+                        }
+                        if(k == strlen(cuvant)){ 
+                            ok = 1;
+                            // printf("before:\n");
+                            // printList(text);
+                            // printf("traba sters intre %d si %d inclusiv\n", sx, sy-1);
+                            aux = k;
+                            while(aux){
+                                del(text, PY, sx);
+                                --aux;
+                            }
+                            // printf("after:\n");
+                            // printList(text);
+                        } else {
+                            k = 0;
+                        }
+                    }
+                    return i;
+}
 
 int main(){
     char c;
@@ -191,49 +239,7 @@ int main(){
                         counter = counter->next;
                     }
                     printf("traba sters cuvantul %s\n", cuvant);
-                    Node *i = text;
-                    int aux = PX;
-                    int auy = PY;
-                    while(i && auy){
-                        if(i->data == '\n') --auy;
-                        i = i->next;
-                    }
-                    while (i && aux)
-                    {
-                        --aux;
-                        i = i->next;
-                    }
-                    if(i)
-                    printf("%c\n", i->data);
-                    int ok = 0;
-                    int k = 0;
-                    int sx, sy;
-                    aux = PX;
-                    while(!ok && i){
-                        while(i && i->data != cuvant[k]) i = i->next, aux++;
-                        sx = aux;
-                        sy = aux;
-                        while(i && i->data == cuvant[k] && k < strlen(cuvant)){
-                            ++k;
-                            i = i->next;
-                            sy++;
-                        }
-                        if(k == strlen(cuvant)){ 
-                            ok = 1;
-                            // printf("before:\n");
-                            // printList(text);
-                            // printf("traba sters intre %d si %d inclusiv\n", sx, sy-1);
-                            aux = k;
-                            while(aux){
-                                del(text, PY, sx);
-                                --aux;
-                            }
-                            // printf("after:\n");
-                            // printList(text);
-                        } else {
-                            k = 0;
-                        }
-                    }
+                    del_word(text, cuvant); 
                 } else if(counter->data == 'd' && counter->next->data == ' '){
                    Node *cc;
                         cc = counter->next;
@@ -252,6 +258,20 @@ int main(){
                         }
                 } else if(counter->data == 'd' && counter->next->data == '\n'){
                     del(text, PY, PX);
+                } else if(counter->data == 'd' && counter->next->data == 'a'){
+                    counter = counter->next->next->next;
+                    char *cuvant = (char *)malloc(100);
+                    while (counter != NULL && counter->data != '\n')
+                    {
+                        strcat(cuvant, &counter->data);                        
+                        counter = counter->next;
+                    }
+                    printf("traba sters cuvantul %s\n", cuvant);
+                    Node *i;
+                    i = del_word(text, cuvant);
+                    while(i != NULL){
+                        i = del_word(text, cuvant);
+                    }
                 }
                 if(counter != NULL)
                     counter = counter->next;

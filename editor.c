@@ -79,6 +79,34 @@ Node *del_word(Node *text, char *cuvant)
     return i;
 }
 
+void replaceWord(Node *text, char *find, char *replace)
+{
+    Node *i;
+    int PPX, PPY;
+    i = del_word(text, find);
+    printf("L-am sters si acum py, px sunt: %d, %d\n", PY, PX);
+    PX++;
+    int j = 0;
+    for (; j < strlen(replace); j++)
+    {
+        printf("Insert %c @ (%d, %d)\n", *(replace + j), PY, PX);
+        ins(text, PY, PX, *(replace + j));
+        if (*(replace + j) == '\n')
+        {
+            PPX = PX;
+            PPY = PY;
+            PX = 0;
+            PY++;
+        }
+        else
+        {
+            PPX = PX;
+            PPY = PY;
+            PX++;
+        }
+    }
+}
+
 int main()
 {
     char c;
@@ -356,29 +384,7 @@ int main()
                         counter = counter->next;
                     }
                     printf("si inlocuit cu: %s\n", replace);
-                    Node *i;
-                    i = del_word(text, find);
-                    printf("L-am sters si acum py, px sunt: %d, %d\n", PY, PX);
-                    PX++;
-                    int j = 0;
-                    for (; j < strlen(replace); j++)
-                    {
-                        printf("Insert %c @ (%d, %d)\n", *(replace+j), PY, PX);
-                        ins(text, PY, PX, *(replace + j));
-                        if (*(replace+j) == '\n')
-                        {
-                            PPX = PX;
-                            PPY = PY;
-                            PX = 0;
-                            PY++;
-                        }
-                        else
-                        {
-                            PPX = PX;
-                            PPY = PY;
-                            PX++;
-                        }
-                    }
+                    replaceWord(text, find, replace);
                 }
                 if (counter != NULL)
                     counter = counter->next;

@@ -175,3 +175,89 @@ void save(Node *text, char *filename){
     }
     fclose(fout);
 }
+
+Node *del_word(Node *text, char *cuvant)
+{
+    Node *i = text;
+    int aux = PX;
+    int auy = PY;
+    while (i && auy)
+    {
+        if (i->data == '\n')
+            --auy;
+        i = i->next;
+    }
+    while (i && aux)
+    {
+        --aux;
+        i = i->next;
+    }
+    if (i)
+        printf("%c\n", i->data);
+    int ok = 0;
+    int k = 0;
+    int sx, sy;
+    aux = PX;
+    while (!ok && i)
+    {
+        while (i && i->data != cuvant[k])
+            i = i->next, aux++;
+        sx = aux;
+        sy = aux;
+        while (i && i->data == cuvant[k] && k < strlen(cuvant))
+        {
+            ++k;
+            i = i->next;
+            sy++;
+        }
+        if (k == strlen(cuvant))
+        {
+            ok = 1;
+            // printf("before:\n");
+            // printList(text);
+            // printf("traba sters intre %d si %d inclusiv\n", sx, sy-1);
+            aux = k;
+            while (aux)
+            {
+                del(text, PY, sx);
+                --aux;
+            }
+            // printf("after:\n");
+            // printList(text);
+        }
+        else
+        {
+            k = 0;
+        }
+    }
+    return i;
+}
+
+Node *replaceWord(Node *text, char *find, char *replace)
+{
+    Node *i;
+    int PPX, PPY;
+    i = del_word(text, find);
+    printf("L-am sters si acum py, px sunt: %d, %d\n", PY, PX);
+    PX++;
+    int j = 0;
+    for (; j < strlen(replace); j++)
+    {
+        printf("Insert %c @ (%d, %d)\n", *(replace + j), PY, PX);
+        ins(i, PY, PX, *(replace + j));
+        if (*(replace + j) == '\n')
+        {
+            PPX = PX;
+            PPY = PY;
+            PX = 0;
+            PY++;
+        }
+        else
+        {
+            PPX = PX;
+            PPY = PY;
+            PX++;
+        }
+    }
+    return i;
+}

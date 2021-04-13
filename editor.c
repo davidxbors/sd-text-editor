@@ -22,91 +22,6 @@
  * r
  */
 
-Node *del_word(Node *text, char *cuvant)
-{
-    Node *i = text;
-    int aux = PX;
-    int auy = PY;
-    while (i && auy)
-    {
-        if (i->data == '\n')
-            --auy;
-        i = i->next;
-    }
-    while (i && aux)
-    {
-        --aux;
-        i = i->next;
-    }
-    if (i)
-        printf("%c\n", i->data);
-    int ok = 0;
-    int k = 0;
-    int sx, sy;
-    aux = PX;
-    while (!ok && i)
-    {
-        while (i && i->data != cuvant[k])
-            i = i->next, aux++;
-        sx = aux;
-        sy = aux;
-        while (i && i->data == cuvant[k] && k < strlen(cuvant))
-        {
-            ++k;
-            i = i->next;
-            sy++;
-        }
-        if (k == strlen(cuvant))
-        {
-            ok = 1;
-            // printf("before:\n");
-            // printList(text);
-            // printf("traba sters intre %d si %d inclusiv\n", sx, sy-1);
-            aux = k;
-            while (aux)
-            {
-                del(text, PY, sx);
-                --aux;
-            }
-            // printf("after:\n");
-            // printList(text);
-        }
-        else
-        {
-            k = 0;
-        }
-    }
-    return i;
-}
-
-void replaceWord(Node *text, char *find, char *replace)
-{
-    Node *i;
-    int PPX, PPY;
-    i = del_word(text, find);
-    printf("L-am sters si acum py, px sunt: %d, %d\n", PY, PX);
-    PX++;
-    int j = 0;
-    for (; j < strlen(replace); j++)
-    {
-        printf("Insert %c @ (%d, %d)\n", *(replace + j), PY, PX);
-        ins(text, PY, PX, *(replace + j));
-        if (*(replace + j) == '\n')
-        {
-            PPX = PX;
-            PPY = PY;
-            PX = 0;
-            PY++;
-        }
-        else
-        {
-            PPX = PX;
-            PPY = PY;
-            PX++;
-        }
-    }
-}
-
 int main()
 {
     char c;
@@ -117,11 +32,14 @@ int main()
     Node *brut_text = NULL;
     Stiva *comenzi;
 
+    FILE *in;
+    in = fopen("editor.in", "r");
+
     chg(0, 0);
 
-    while (running)
+    while (running && !feof(in))
     {
-        scanf("%c", &c);
+        fscanf(in, "%c", &c);
         if (c != 'q')
         {
             brut_text = pushList(brut_text, c);
@@ -143,12 +61,12 @@ int main()
             }
             else
                 counter = counter->next->next->next;
-            if (state)
-            {
-                Node *tail = lastNode(text);
-                tail->back->next = NULL;
-                chg(PPX - 1, PPY);
-            }
+            // if (state)
+            // {
+            //     Node *tail = lastNode(text);
+            //     tail->back->next = NULL;
+            //     chg(PPX - 1, PPY);
+            // }
             state = !state;
         }
         else
@@ -182,7 +100,7 @@ int main()
                 else if (counter->data == 'b')
                 {
                     // printf("%d %d\n", PX, PY);
-                    text = del(text, PY, PX - 1);
+                    text = del(text, PY, PX );
                     counter = counter->next;
                 }
                 else if (counter->data == '\n')
@@ -210,7 +128,7 @@ int main()
                             p *= 10;
                             cc = cc->next;
                         }
-                        text = del(text, x, -1);
+                        text = del(text, x-1, -1);
                     }
                 }
                 else if (counter->data == 'g' && counter->next->data == 'l' &&
@@ -233,42 +151,16 @@ int main()
                 else if (counter->data == 'g' && counter->next->data == 'c')
                 {
                     counter = counter->next->next->next;
-                    char cauta = counter->data;
+                    int cauta = atoi(&counter->data);
                     counter = counter->next;
-                    // printf("wtf: %c %c\n", cauta, counter->data);
                     if (counter && counter->data == '\n')
                     {
                         // se cauta pe linia curenta
-                        Node *i = text;
-                        int ax = PX;
-                        int ay = PY;
-                        int aux = PY;
-                        PX = 0;
-                        while (i && aux)
-                        {
-                            if (i->data == '\n')
-                                --aux;
-                            i = i->next;
-                        }
-                        // printf("am primit gc simplu si caut caracterul %c!", cauta);
-                        // printf("%c\n", i->data);
-                        while (i && i->data != '\n' && i->data != cauta)
-                        {
-                            i = i->next;
-                            PX++;
-                        }
-                        if (i == NULL || i->data == '\n')
-                        {
-                            printf("Nu s-a gasit caracterul pe linia curenta!\n");
-                            chg(ax, ay);
-                        }
-                        else
-                        {
-                            printf("Am gasit %c pe linia %d coloana %d!\n", cauta, PY, PX);
-                        }
+                        chg(cauta-1, PY);
                     }
                     else if (counter && counter->data == ' ')
                     {
+                        // se va cauta pe linia x
                         Node *cc;
                         cc = counter->next;
                         int x = 0;
@@ -280,35 +172,8 @@ int main()
                             p *= 10;
                             cc = cc->next;
                         }
-                        // se cauta pe linia x
-                        Node *i = text;
-                        int ax = PX;
-                        int ay = PY;
-                        int aux = x;
-                        PX = 0;
-                        while (i && aux)
-                        {
-                            if (i->data == '\n')
-                                --aux;
-                            i = i->next;
-                        }
-                        PY = x;
-                        // printf("am primit gc simplu si caut caracterul %c!", cauta);
-                        // printf("%c\n", i->data);
-                        while (i && i->data != '\n' && i->data != cauta)
-                        {
-                            i = i->next;
-                            PX++;
-                        }
-                        if (i == NULL || i->data == '\n')
-                        {
-                            printf("Nu s-a gasit caracterul pe linia curenta!\n");
-                            chg(ax, ay);
-                        }
-                        else
-                        {
-                            printf("Am gasit %c pe linia %d coloana %d!\n", cauta, PY, PX);
-                        }
+                        printf("%d %d\n", cauta-1, x-1);
+                        chg(cauta-1, x-1);
                     }
                 }
                 else if (counter->data == 'd' && counter->next->data == 'w')
@@ -386,6 +251,36 @@ int main()
                     printf("si inlocuit cu: %s\n", replace);
                     replaceWord(text, find, replace);
                 }
+                else if(counter->data == 'r' && counter->next->data == 'a'){
+                    counter = counter->next->next->next;
+                    char *find = (char *)malloc(100);
+                    char *replace = (char *)malloc(100);
+                    while (counter != NULL && counter->data != ' ')
+                    {
+                        strcat(find, &counter->data);
+                        counter = counter->next;
+                    }
+                    printf("traba sters cuvantul %s\n", find);
+                    counter = counter->next;
+                    while (counter != NULL && counter->data != '\n')
+                    {
+                        strcat(replace, &counter->data);
+                        counter = counter->next;
+                    }
+                    printf("si inlocuit cu: %s\n", replace);
+                    int auxX = PX;
+                    int auxY = PY;
+
+                    chg(0,0);
+
+                    // do work
+                    Node *i = replaceWord(text, find, replace);
+                    while(i != NULL){
+                        i = replaceWord(i, find, replace);
+                    }
+
+                    chg(auxX, auxY);
+                }
                 if (counter != NULL)
                     counter = counter->next;
             }
@@ -414,5 +309,6 @@ int main()
     // text = ins(text, 1, 5, 's');
     // text = ins(text, 1, 6, 't');
     // printList(text);
+    fclose(in);
     return 0;
 }

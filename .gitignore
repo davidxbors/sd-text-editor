@@ -1,0 +1,6 @@
+*.in
+*.out
+*.sh
+input
+output
+ref

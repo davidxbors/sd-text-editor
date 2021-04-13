@@ -10,7 +10,7 @@ typedef struct stiva {
 	struct stiva *back;
 } Stiva;
 
-Stiva *init_stiva(char data) {
+Stiva *init_stiva(char *data) {
 	Stiva *stiva = (Stiva *)malloc(sizeof(Stiva));
 	stiva->data = data;
 	stiva->next = NULL;
@@ -31,7 +31,7 @@ void printStiva(Stiva *head) {
 	}
 }
 
-Stiva *pushStiva(Stiva *head, char data) {
+Stiva *pushStiva(Stiva *head, char *data) {
 	Stiva *new_stiva = init_stiva(data);
 	Stiva *counter;
 

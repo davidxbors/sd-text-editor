@@ -22,6 +22,11 @@
  * r
  */
 
+void freeList(Node *list){
+	while(list)
+		list = del(list, 0, 0);
+}
+
 int main()
 {
     char c;
@@ -310,5 +315,7 @@ int main()
     // text = ins(text, 1, 6, 't');
     // printList(text);
     fclose(in);
+    freeList(brut_text);
+    freeList(text);
     return 0;
 }
